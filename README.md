@@ -10,7 +10,8 @@ The inidividual frames descriptions are contatenated and sent to the Llama 3.3 7
 ## Future work
 
 Experiment with different thresholds
-Try batching frames together with one call
-Try performing intermediate summarizations on frame descriptions, especially if you have a lot of frames
-Try different models for frame descriptions and summarization
-Try different platforms ( Groq, Lambda, etc... ) for speed and throughput
+
+1. Try batching frames together with one call
+2. Try performing intermediate summarizations on frame descriptions, especially if you have a lot of frames
+3. Try different models for frame descriptions and summarization
+4. Try different platforms ( Groq, Lambda, etc... ) for speed and throughput
