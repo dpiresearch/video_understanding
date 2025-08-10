@@ -1,11 +1,11 @@
 ### Video understanding
-Use Llama 4 models to intepret scenes from a movie and perform summarization 
+Use OpenAI GPT-5 models to interpret scenes from a movie and perform summarization
 ## Implementation
-Image frames are split from videos and sent to the Llama 4 Scout model to be intepreted when a scene change is detected.
+Image frames are split from videos and sent to the GPT-5 model to be interpreted when a scene change is detected.
 
 A scene change is detected when the histogram between frames has a difference beyond a threshold. The key is the cv2.HISTCMP_BHATTACHARYYA metric used when doing compareHist()
 
-The inidividual frames descriptions are contatenated and sent to the Llama 3.3 70b model where it performs a summarization over all the frame descriptions
+The individual frames descriptions are concatenated and sent to the GPT-5 model where it performs a summarization over all the frame descriptions
 
 ## Future work
 

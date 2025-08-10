@@ -8,19 +8,15 @@ import os
 import subprocess
 import shutil
 import time
-import ollama
 from typing import Optional, List, Any
 
 #
-# Video Understanding via Llama
-# Llamacon hackathon 2025 project
+# Video Understanding via OpenAI GPT-5
 # Split frames out of the video based on scene changes
-# Send each frame to the Scout model for Summarization
-# Concatenate all frame descriptions and send to the 70b model for video summarization
+# Send each frame to GPT-5 for analysis
+# Concatenate all frame descriptions and send to GPT-5 for video summarization
 #
-openai.api_key = os.getenv("LLAMA_API_KEY")
-openai.base_url="https://api.llama.com/compat/v1/"
-openai.api_type="openai"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
 SYS_PROMPT="You are a world class analyzer of images and can accurate detect objects in a scene and infer what may be going on in the scene 2 seconds before and 2 seconds afterwards"
 GEN_PROMPT="Tell me what is going on in this scene"
@@ -43,7 +39,7 @@ def call_vision_model(base64_image) -> str:
     start_time = time.time()
     
     response = openai.chat.completions.create(
-        model="Llama-4-Scout-17B-16E-Instruct-FP8",
+        model="gpt-5",
         messages=[
             {"role": "system", "content": [
                 {
@@ -89,7 +85,7 @@ def process_frame(frame):
 
 frame_descriptions = ""
 
-def split_by_scene(video_path, threshold=1):
+def split_by_scene(video_path, threshold=1.0):
     global frame_descriptions
     cap = cv2.VideoCapture(video_path)
     ret, prev_frame = cap.read()
@@ -129,7 +125,7 @@ def split_by_scene(video_path, threshold=1):
 def summarize(frame_descrptions: str):
     start_time = time.time()
     response = openai.chat.completions.create(
-        model="Llama-3.3-70B-Instruct",
+        model="gpt-5",
         messages=[
             {"role": "system", "content": [
                 {
