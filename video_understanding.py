@@ -87,10 +87,8 @@ def process_frame(frame):
 
     return base64_str
 
-frame_descriptions = ""
-
-def split_by_scene(video_path, threshold=1):
-    global frame_descriptions
+def split_by_scene(video_path, threshold: float = 1.0):
+    frame_descriptions_list = []
     cap = cv2.VideoCapture(video_path)
     ret, prev_frame = cap.read()
     prev_hist = cv2.calcHist([prev_frame], [0,1,2], None, [8,8,8],[0, 256, 0, 256, 0, 256])
@@ -102,7 +100,7 @@ def split_by_scene(video_path, threshold=1):
         if (scene_num == 1):
             ret_response = call_vision_model(process_frame(frame))
             frame_response = f"Frame {scene_num} response is: {ret_response}"
-            frame_descriptions += frame_response
+            frame_descriptions_list.append(frame_response)
             print(f"\n =============== Frame {scene_num} ============ \n{frame_response}")
         if not ret:
             print(f"{scene_num} total scenes analyzed")
@@ -117,14 +115,15 @@ def split_by_scene(video_path, threshold=1):
             print(f"Scene change detected at frame {int(cap.get(cv2.CAP_PROP_POS_FRAMES))}")
             ret_response = call_vision_model(process_frame(frame))
             frame_response = f"Frame {scene_num} response is: {ret_response}"
-            frame_descriptions += frame_response
+            frame_descriptions_list.append(frame_response)
             print(f"\n =============== Frame {scene_num} ============ \n{frame_response}")
 
-        prev_frame = frame.copy()
-        prev_hist = curr_hist.copy()
+        prev_frame = frame
+        prev_hist = curr_hist
         scene_num += 1
 
     cap.release()
+    return "".join(frame_descriptions_list)
 
 def summarize(frame_descrptions: str):
     start_time = time.time()
@@ -160,7 +159,7 @@ videos = {
     "flame":"/Users/dpang/Downloads/BMFlameTruck.MOV",
     "bourne":"/Users/dpang/Downloads/Bourne.MOV"
 }
-split_by_scene(videos["bourne"], 0.5)
+frame_descriptions = split_by_scene(videos["bourne"], 0.5)
 summary = summarize(frame_descriptions)
 
 print(f"\n ==========  SUMMARY ===========\n{summary}")
